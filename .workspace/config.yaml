@@ -1,0 +1,19 @@
+workspace:
+  name: domore
+  repositories:
+    backend:
+      path: ../web-api
+      type: backend
+      required: true
+    frontend:
+      path: ../web-app
+      type: frontend
+      required: true
+  agent:
+    default: codex
+    max_iterations: 10
+  workflow:
+    require_plan: true
+    require_tests: true
+    require_review: true
+    update_execution_history: true

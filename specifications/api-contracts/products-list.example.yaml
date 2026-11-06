@@ -1,0 +1,32 @@
+openapi: 3.0.3
+info:
+  title: DoMore products list - source-inspected example
+  version: 0.1.0
+  description: >-
+    Partial example inspected against web-api products.controller.ts and products.service.ts.
+    Runtime, errors and deployment prefix have not been independently verified.
+paths:
+  /api/v1/products:
+    get:
+      summary: List published products
+      description: The default API prefix is configurable; this operation is marked public in source.
+      security: []
+      responses:
+        '200':
+          description: Product list; only a subset of fields is shown.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required: [id, slug, name, priceVnd]
+                  properties:
+                    id:
+                      type: string
+                    slug:
+                      type: string
+                    name:
+                      type: string
+                    priceVnd:
+                      type: integer
