@@ -20,8 +20,8 @@ function fixture(t) {
   for (const name of ['README.md', 'AGENTS.md', 'CONTRIBUTING.md']) fs.copyFileSync(path.join(source, name), path.join(hub, name));
   fs.mkdirSync(path.join(hub, 'node_modules'));
   fs.cpSync(path.join(source, 'node_modules', 'yaml'), path.join(hub, 'node_modules', 'yaml'), { recursive: true });
-  for (const name of ['web-api', 'web-app']) {
-    const repo = path.join(base, name);
+  for (const name of ['core-api', 'core-app']) {
+    const repo = path.join(hub, name);
     fs.mkdirSync(repo);
     const result = spawnSync('git', ['init', '-q', repo], { encoding: 'utf8' });
     assert.equal(result.status, 0, result.stderr);
@@ -55,11 +55,11 @@ test('rejects missing repositories and parent repositories masquerading as confi
   const f = fixture(t);
   const configPath = path.join(f.hub, '.workspace', 'config.yaml');
   const original = fs.readFileSync(configPath, 'utf8');
-  fs.writeFileSync(configPath, original.replace('../web-api', '../missing'));
+  fs.writeFileSync(configPath, original.replace('core-api', 'missing'));
   assert.notEqual(f.run('validate').status, 0);
-  const nested = path.join(f.base, 'web-api', 'not-a-repository');
+  const nested = path.join(f.hub, 'core-api', 'not-a-repository');
   fs.mkdirSync(nested);
-  fs.writeFileSync(configPath, original.replace('../web-api', '../web-api/not-a-repository'));
+  fs.writeFileSync(configPath, original.replace('core-api', 'core-api/not-a-repository'));
   const result = f.run('init');
   assert.notEqual(result.status, 0);
   assert.match(result.stderr, /not repository root/);

@@ -2,11 +2,11 @@ workspace:
   name: domore
   repositories:
     backend:
-      path: ../web-api
+      path: core-api
       type: backend
       required: true
     frontend:
-      path: ../web-app
+      path: core-app
       type: frontend
       required: true
   agent:

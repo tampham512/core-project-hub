@@ -1,0 +1,9 @@
+# Khắc phục sai lệch workspace và database — 06/11/2026
+
+- Task: `TASK-20261106122547-39EFD0`; phát hiện ban đầu: `EXEC-20261106-workspace-database-audit.md`.
+- Đã sửa đường dẫn repo trong config hub, tài liệu setup và fixture test; cập nhật dependency `yaml` từ 2.8.1 lên 2.9.1.
+- Theo ADR `ADR-20261106-video-plan-source.md`, dùng VideoPlan làm nguồn gói, bỏ service/model Plan không dùng và thêm `showInShowcase`. Trang gói khóa nút mua khi gói chưa xuất bản.
+- Target database: `DATABASE_URL` của API, host PostgreSQL Render đã kiểm tra; không ghi thông tin kết nối. Áp dụng `20261104-manual-product-grants.sql` và `20261106-video-plan-showcase.sql` trong cùng transaction sau khi xác nhận các đối tượng chưa tồn tại. Không chạy seed tổng. Chạy seed gói chuyên biệt hai lần: tạo ba gói nháp và ba Product nội bộ, không sửa gói đang có; lần hai không tạo bản sao.
+- Sau thực hiện: 4 Order, 4 OrderItem, 7 Product (gồm 3 mới), 3 VideoPlan, 0 ManualProductGrant. Schema diff từ `DIRECT_URL` sang Prisma: `No difference detected`; kiểm tra trước đó xác nhận DIRECT_URL và DATABASE_URL có cùng host/tên database.
+- Kiểm thử: backend build thành công; Jest 13/13; frontend typecheck thành công; hub validate thành công và test 5/5; `npm audit` hub không có lỗ hổng; `git diff --check` không lỗi. GET health và plans qua API/proxy 200. Trình duyệt local hiển thị Basic 69.000đ, Pro 149.000đ, Premium 249.000đ, cả ba nút `Chưa mở bán` disabled.
+- Giới hạn: chưa upload ZIP hay template cho các gói, chưa test login/admin, cấp quyền thực tế, checkout/payment/tải end-to-end, chưa deploy source lên Render/Vercel. Database vẫn chưa có lịch sử `_prisma_migrations`; cần kế hoạch baseline riêng, không khẳng định lịch sử đã được sửa. Các phép đếm không thay thế đối chiếu từng bản ghi hoặc kiểm tra mọi quyền cũ.
